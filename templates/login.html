@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block head %}
+
+<title>Login Page</title>
+{% endblock %}
+
+{% block body %}
+<br>
+<div class="container">
+
+<form class"form-signin" action="{{ url_for('login') }}" method="post">
+    <h1> Login </h1>
+    <label for="inputText" class="sr-only">Username</label>
+    <input class="form-control" type="username"  required="" placeholder="Username" name="username" required maxlength="255" minlength=1 oninvalid="setCustomValidity('Should not be left empty.')"
+       oninput="setCustomValidity('')" /></input>
+
+<br>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input class="form-control" type="password"  required="" placeholder="Password" name="password" required maxlength="255" minlength=1 oninvalid="setCustomValidity('Should not be left empty.')"
+       oninput="setCustomValidity('')" /></input>
+
+     <br>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
+    <a href="{{ url_for('registration') }}">Create Account</a>
+</form>
+</div class="container">
+
+{% endblock %}

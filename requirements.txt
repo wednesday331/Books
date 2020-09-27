@@ -1,0 +1,23 @@
+Flask
+Flask-Session
+psycopg2-binary
+SQLAlchemy
+
+This is everything that was used:
+import os, csv, requests
+from flask import (
+    abort, 
+    Flask,
+    flash,
+    logging,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for
+)
+from flask_session import Session
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from wtforms import Form, StringField, TextAreaField, PasswordField, validators
+from datetime import datetime

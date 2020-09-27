@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block head %}
+
+<title>API Response</title>
+{% endblock %}
+
+{% block body %}
+
+<br>
+<h6>{ </h6>
+<h6>"title": "{{book1.title}}",</h6>
+<h6>"author": "{{book1.author}}",</h6>
+<h6>"year": {{book1.year}},</h6>
+<h6>"isbn": "{{book1.isbn}}",</h6>
+<h6>"review_count": {{review_count}},</h6>
+<h6>"average_score": {{average_score}}</h6>
+<h6>} </h6>
+
+
+{% endblock %}

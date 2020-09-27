@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block head %}
+
+<title>Search Page</title>
+{% endblock %}
+
+{% block body %}
+
+<div style="float:right">
+<a href="{{ url_for('logout') }}">Log out</a>
+</div>
+<br><br>
+<div class="container">
+
+<form class="form-signin" action="{{ url_for('search') }}" method="post">
+    <input class="form-control"  required="" placeholder="Search for Titles, Authors or ISBNs" name="search" required maxlength="255" minlength=1 oninvalid="setCustomValidity('Should not be left empty.')"
+       oninput="setCustomValidity('')" /></input>
+
+     <br>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Search</button>
+
+
+</form>
+
+</div class="container">
+
+
+{% endblock %}

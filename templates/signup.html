@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>Signup Page</title>
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+      <h1>Create a username and password</h1>
+      <br>
+
+      <form action="/registration" method="post">
+         <input class="form-control" type="username"  required="" placeholder="Username" name="username" required maxlength="255" minlength=1 oninvalid="setCustomValidity('Should not be left empty.')"
+            oninput="setCustomValidity('')" /></input>
+        <br>
+        <input class="form-control" type="password"  required="" placeholder="Password" name="password" required maxlength="255" minlength=1 oninvalid="setCustomValidity('Should not be left empty.')"
+           oninput="setCustomValidity('')" /></input>
+        <br>
+
+      <input class="form-control" type="password"  required="" placeholder="Confirm Password" name="confirm" required maxlength="255" minlength=1 oninvalid="setCustomValidity('Should not be left empty.')"
+         oninput="setCustomValidity('')" /></input>
+
+      <br>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>
+      </form>
+
+
+{% endblock %}

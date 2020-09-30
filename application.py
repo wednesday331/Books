@@ -48,7 +48,7 @@ db = scoped_session(sessionmaker(bind=engine))
 goodreads_key='tLGQQxQlcIbAeYedY1ToHQ'
 
 
-#The login page from index page:
+# The login page from index page:
 @app.route('/', methods=['GET','POST'])
 def login_1():
     """Enables a person to log in."""
@@ -82,7 +82,7 @@ def login_1():
             return render_template("loginnouser.html")
     return render_template("login.html")
 
-#Direct login route:
+# Direct login route:
 @app.route('/login', methods=['GET','POST'])
 def login():
     """Enables a person to log in."""
@@ -115,7 +115,7 @@ def login():
             return render_template("loginnouser.html")
     return render_template("login.html")
 
-#The signup/registration page:
+# The signup/registration page:
 @app.route('/registration', methods=['GET','POST'])
 def registration():
     """Enables a person to register an account."""
@@ -174,9 +174,9 @@ def search():
 
 
 
-#Book Page
+# Book Page
 @app.route("/<string:isbn>", methods=["GET", "POST"])
-def bookpage(isbn):
+def book_page(isbn):
     """Retrieves the appropriate page for the book."""
     book_1= db.execute("""SELECT *
                       FROM booklist

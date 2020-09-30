@@ -8,11 +8,11 @@
 <a href="{{ url_for('logout') }}">Log out</a>
 </div>
 
-<h1 class="book-title"><b>{{ book1[1] }}</b></h1>
-<h4 class="book-title">By {{ book1[2] }}</h4>
+<h1 class="book-title"><b>{{ book_1[1] }}</b></h1>
+<h4 class="book-title">By {{ book_1[2] }}</h4>
 <h5 class="book-title"><b>ISBN:</b> <i>{{ isbn }} </i></h5>
-<h5 class="book-title"><b>Date Published:</b> <i>{{ book1[3] }}</i></h5>
-<h5 class="book-title"><b>Average Goodreads Rating: </b><i> {{ averagerating }}/5 </i></h5> <p><h6> <i>(based on <b>{{ workratingscount }}</b> ratings)</i></h6></p>
+<h5 class="book-title"><b>Date Published:</b> <i>{{ book_1[3] }}</i></h5>
+<h5 class="book-title"><b>Average Goodreads Rating: </b><i> {{ average_rating }}/5 </i></h5> <p><h6> <i>(based on <b>{{ work_ratings_count }}</b> ratings)</i></h6></p>
 
 
 
@@ -21,7 +21,7 @@
 <br>
 <div class="container">
 <h3 align="center"> Add a Review </h3>
-<form  action="{{ url_for('bookpage', isbn=isbn)}}" method="post">
+<form  action="{{ url_for('book_page', isbn=isbn)}}" method="post">
     <input class="form-control"  required="" placeholder="Add a Review/Comment" name="comment" required maxlength="255" minlength=1 oninvalid="setCustomValidity('Should not be left empty.')"
        oninput="setCustomValidity('')" /></input><br>
 <p>Rate out of 5:
@@ -53,13 +53,13 @@
 </tr>
 </thead>
 
-{% for existingreview in existingreviews %}
+{% for existing_review in existing_reviews %}
 <tr>
-<td>{{existingreview.username}}</td>
-<td>{{existingreview.book}}</td>
-<td>{{existingreview.comment}}</td>
-<td>{{existingreview.date}}</td>
-<td>{{existingreview.star}}</td>
+<td>{{existing_review.username}}</td>
+<td>{{existing_review.book}}</td>
+<td>{{existing_review.comment}}</td>
+<td>{{existing_review.date}}</td>
+<td>{{existing_review.star}}</td>
 </tr>
 {% endfor %}
 </table>

@@ -12,8 +12,9 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
+#CSV Reader
 def main():
-    """Reads the csv file and uploads it to the booklist table."""
+    """Reads the CSV file and uploads it to the booklist table."""
     f = open("books.csv")
     reader = csv.reader(f)
     for isbn, title, author, year in reader: # loop gives each column a name

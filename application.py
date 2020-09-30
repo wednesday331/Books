@@ -1,13 +1,16 @@
-#URI: postgres://zszqvyfergyvdo:eb1d4ce814801f8b111ac946b1a1a24c22354ce0951ccc0ee528199da0fd2a17@ec2-34-200-72-77.compute-1.amazonaws.com:5432/d9djaumq4kmhi5
-#Heroku Password:       eb1d4ce814801f8b111ac946b1a1a24c22354ce0951ccc0ee528199da0fd2a17
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+"""Contains book review project Python code to execute with HTML pages."""
 
+import csv,
+import os,
+import requests
 
-import os, csv, requests
-
+from datetime import datetime
 from flask import (
     abort,
-    Flask,
     flash,
+    Flask,
     logging,
     redirect,
     render_template,
@@ -18,10 +21,16 @@ from flask import (
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from wtforms import Form, StringField, TextAreaField, PasswordField, validators
-from datetime import datetime
+from wtforms import (
+    Form, 
+    PasswordField,
+    StringField, 
+    TextAreaField, 
+    validators
+)
 
 app = Flask(__name__)
+
 app.secret_key = 'secretkey'
 
 # Check for environment variable
@@ -36,67 +45,96 @@ Session(app)
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
-
 goodreads_key='tLGQQxQlcIbAeYedY1ToHQ'
-#------------------------------------------------------------------
 
-#The login page:
+
+#The login page from index page:
 @app.route('/', methods=['GET','POST'])
-def login1():
+def login_1():
+    """Enables a person to log in."""
     session.clear()
-
     if request.method == 'POST':
-        username1 = request.form.get("username")
-        password1=request.form.get("password")
-        user=db.execute("SELECT * FROM accounts WHERE username=:username1;", {"username1": username1}).fetchone()
+        username_1 = request.form.get("username")
+        password_1=request.form.get("password")
+        user=db.execute("""SELECT *
+                           FROM accounts
+                           WHERE username=:username_1;
+                           """, 
+                        {"username_1": username_1}).fetchone()
         if user is not None:
-            usernameid=db.execute("SELECT id FROM accounts WHERE username=:username1;", {"username1": username1}).fetchone()
-            passwordid=db.execute("SELECT id FROM accounts WHERE password=:password1;", {"password1": password1}).fetchone()
-
-            if usernameid == passwordid:
+            username_id=db.execute("""SELECT id
+                                     FROM accounts
+                                     WHERE username=:username_1;
+                                     """, 
+                                  {"username_1": username_1}).fetchone()
+            
+            password_id=db.execute("""SELECT id
+                                  FROM accounts
+                                  WHERE password=:password_1;
+                                  """, 
+                                  {"password_1": password_1}).fetchone()
+            if username_id == password_id:
                 session["username"] = user["username"]
                 return render_template("search.html")
-            elif usernameid != passwordid:
+            elif username_id != password_id:
                 return render_template("loginnomatch.html")
         elif user is None:
             return render_template("loginnouser.html")
     return render_template("login.html")
 
-#The login page:
+#Direct login route:
 @app.route('/login', methods=['GET','POST'])
 def login():
+    """Enables a person to log in."""
     session.clear()
-
     if request.method == 'POST':
-        username1 = request.form.get("username")
-        password1=request.form.get("password")
-        user=db.execute("SELECT * FROM accounts WHERE username=:username1;", {"username1": username1}).fetchone()
+        username_1 = request.form.get("username")
+        password_1=request.form.get("password")
+        user=db.execute("""SELECT *
+                        FROM accounts
+                        WHERE username=:username_1;
+                        """, 
+                        {"username_1": username_1}).fetchone()
         if user is not None:
-            usernameid=db.execute("SELECT id FROM accounts WHERE username=:username1;", {"username1": username1}).fetchone()
-            passwordid=db.execute("SELECT id FROM accounts WHERE password=:password1;", {"password1": password1}).fetchone()
-
-            if usernameid == passwordid:
+            username_id=db.execute("""SELECT id
+                                  FROM accounts
+                                  WHERE username=:username_1;
+                                  """, 
+                                  {"username_1": username_1}).fetchone()
+            password_id=db.execute("""SELECT id
+                                  FROM accounts
+                                  WHERE password=:password_1;
+                                  """, 
+                                  {"password_1": password_1}).fetchone()
+            if username_id == password_id:
                 session["username"] = user["username"]
                 return render_template("search.html")
-            elif usernameid != passwordid:
+            elif username_id != password_id:
                 return render_template("loginnomatch.html")
         elif user is None:
             return render_template("loginnouser.html")
     return render_template("login.html")
-
 
 #The signup/registration page:
 @app.route('/registration', methods=['GET','POST'])
 def registration():
+    """Enables a person to register an account."""
     if request.method == "POST":
         if request.form.get("password") != request.form.get("confirm"):
             return render_template("signupnomatch.html")
         else:
-            username1 = request.form.get("username")
-            user=db.execute("SELECT * FROM accounts WHERE username=:username1;", {"username1": username1}).fetchone()
+            username_1 = request.form.get("username")
+            user=db.execute("""SELECT *
+                            FROM accounts
+                            WHERE username=:username_1;
+                            """, 
+                            {"username_1": username_1}).fetchone()
             if user is None:
-                password1=request.form.get("password")
-                db.execute("INSERT INTO accounts (username, password) VALUES (:username1, :password1)",{"username1": username1, "password1": password1})
+                password_1=request.form.get("password")
+                db.execute("""INSERT INTO accounts (username, password)
+                              VALUES (:username_1, :password_1)
+                              """,
+                           {"username_1": username_1, "password_1": password_1})                
                 db.commit()
                 return render_template("loginaftercreating.html")
             else:
@@ -107,19 +145,28 @@ def registration():
 #Logout
 @app.route("/logout")
 def logout():
+    """Enables a person to logout."""
     session.clear()
     return render_template("logout.html")
 
 #Search page
 @app.route("/search", methods=['GET','POST'])
 def search():
+    """"Contains the different search functionalities."""
     if not session:
         return render_template("logintosearch.html")
     if request.method == "POST":
         if request.form.get("search"):
             search=request.form.get("search").lower()
-            search1= "%"+search+"%"
-            books = db.execute("SELECT * FROM booklist WHERE lower(title) LIKE :search OR lower(author) LIKE :search OR lower(isbn) LIKE :search",{"search": search1}).fetchall()
+            search_1= "%"+search+"%"
+            books = db.execute("""SELECT *
+                               FROM booklist
+                               WHERE lower(title)
+                               LIKE :search OR lower(author)
+                               LIKE :search OR lower(isbn)
+                               LIKE :search
+                               """,
+                               {"search": search_1}).fetchall()
             if books ==[]:
                 return render_template("searchresultsnobooks.html", books=books)
             return render_template("searchresults.html", books=books)
@@ -130,45 +177,114 @@ def search():
 #Book Page
 @app.route("/<string:isbn>", methods=["GET", "POST"])
 def bookpage(isbn):
-    book1= db.execute("SELECT * FROM booklist WHERE isbn=:isbn", {"isbn": isbn}).fetchone()
-    if book1 is None:
+    """Retrieves the appropriate page for the book."""
+    book_1= db.execute("""SELECT *
+                      FROM booklist
+                      WHERE isbn=:isbn
+                      """, 
+                      {"isbn": isbn}).fetchone()
+    if book_1 is None:
         abort(404)
-    res= requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": goodreads_key, "isbns":isbn})
+    res= requests.get("https://www.goodreads.com/book/review_counts.json", 
+                      params={"key": goodreads_key, "isbns":isbn})
     stars=[1,2,3,4,5]
-    existingreviews=db.execute("SELECT * from reviews WHERE book=:title",{"title": book1[1]}).fetchall()
+    existing_reviews=db.execute("""SELECT *
+                               from reviews
+                               WHERE book=:title
+                               """,
+                               {"title": book_1[1]}).fetchall()
     if res.status_code==200:
-        averagerating=res.json()["books"][0]["average_rating"]
-        workratingscount=res.json()["books"][0]["work_ratings_count"]
+        average_rating=res.json()["books"][0]["average_rating"]
+        work_ratings_count=res.json()["books"][0]["work_ratings_count"]
     else:
-        averagerating=["Not Available"]
-        workratingscount=["Not Available"]
-
+        average_rating=["Not Available"]
+        work_ratings_count=["Not Available"]
     if request.method == "POST":
         star =request.form.get('star')
         comment=request.form.get('comment')
         username=session["username"]
         date=datetime.today()
-        revdata=db.execute("SELECT * FROM reviews WHERE username=:username AND  book=:title", {"username":username, "title": book1[1]}).fetchall()
-        if revdata:
-            return render_template("reviewalreadysubmitted.html", existingreviews=existingreviews, book1=book1, isbn=isbn, averagerating=averagerating, workratingscount=workratingscount, stars=stars)
+        rev_data=db.execute("""SELECT *
+                           FROM reviews
+                           WHERE username=:username
+                           AND  book=:title
+                           """, 
+                           {"username":username, "title": book1[1]}
+                          ).fetchall()
+        if rev_data:
+            return render_template("reviewalreadysubmitted.html", 
+                                   existing_reviews=existing_reviews, 
+                                   book_1=book_1, 
+                                   isbn=isbn, 
+                                   average_rating=average_rating, 
+                                   work_ratings_count=work_ratings_count, 
+                                   stars=stars
+                                  )
         else:
-            db.execute("INSERT into reviews (username, book, comment, date, star) VALUES (:username, :book, :comment, :date, :star)", {"username": username, "book": book1[1], "comment": comment, "date": date, "star": star})
+            db.execute("""INSERT into reviews (username,
+                                               book, 
+                                               comment, 
+                                               date, 
+                                               star)
+                          VALUES (:username,
+                                  :book, 
+                                  :comment, 
+                                  :date, 
+                                  :star)
+                       """, 
+                       {"username": username,
+                        "book": book1[1],
+                        "comment": comment,
+                        "date": date,
+                        "star": star}
+                      )
+            
             db.commit()
-            return render_template('reviewsubmittedsuccessfully.html', existingreviews=existingreviews, book1=book1, isbn=isbn, averagerating=averagerating, workratingscount=workratingscount, stars=stars)
+            return render_template('reviewsubmittedsuccessfully.html', 
+                                   existing_reviews=existing_reviews, 
+                                   book_1=book_1, 
+                                   isbn=isbn, 
+                                   average_rating=average_rating, 
+                                   work_ratings_count=work_ratings_count, 
+                                   stars=stars
+                                  )
+    return render_template('book.html', 
+                           existing_reviews=existing_reviews, 
+                           book_1=book_1,
+                           isbn=isbn, 
+                           average_rating=average_rating, 
+                           work_ratings_count=work_ratings_count, 
+                           stars=stars
+                          )
 
-    return render_template('book.html', existingreviews=existingreviews, book1=book1, isbn=isbn, averagerating=averagerating, workratingscount=workratingscount, stars=stars)
-
-#Returning information when the API is given
+#API function
 @app.route("/api/<isbn>", methods=["GET", "POST"])
 def api(isbn):
-    book1= db.execute("SELECT * FROM booklist WHERE isbn=:isbn", {"isbn": isbn}).fetchone()
-    if book1 is None:
+    """Returns information when the API is given."""
+    book_1= db.execute("""SELECT *
+                      FROM booklist
+                      WHERE isbn=:isbn
+                      """, 
+                      {"isbn": isbn}).fetchone()
+    if book_1 is None:
         abort(404)
-    reviews= db.execute("SELECT * FROM reviews WHERE book=:title", {"title": book1[1]}).fetchall()
+    reviews= db.execute("""SELECT *
+                        FROM reviews
+                        WHERE book=:title
+                        """, 
+                        {"title": book1[1]}).fetchall()
     review_count=len(reviews)
     if review_count==0:
         average_score="N/A"
     else:
-        avgrating=db.execute("SELECT avg(star) from reviews WHERE book=:title", {"title": book1[1]}).fetchall()
-        average_score='%.1f' % int(avgrating[0][0])
-    return render_template('apiresponse.html', book1=book1, review_count=review_count, average_score=average_score, reviews=reviews)
+        avg_rating=db.execute("""SELECT avg(star) from reviews
+                             WHERE book=:title
+                             """,
+                             {"title": book1[1]}).fetchall()
+        average_score='%.1f' % int(avg_rating[0][0])
+    return render_template('apiresponse.html', 
+                           book_1=book_1, 
+                           review_count=review_count, 
+                           average_score=average_score, 
+                           reviews=reviews
+                          )

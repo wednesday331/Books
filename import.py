@@ -12,7 +12,6 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
-
 def main():
     """Reads the csv file and uploads it to the booklist table."""
     f = open("books.csv")
